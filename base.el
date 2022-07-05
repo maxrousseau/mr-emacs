@@ -11,7 +11,7 @@
 ;; User defined default variables
 ;; ------------------------------------------------------------
 (cond ((string-equal system-type "windows-nt") (setq source_dir "C:\\Users\\roum5\\source\\"))
-      ((string-equal system-type "gnu/linux") (setq source_dir "/home/max/src")))
+      ((string-equal system-type "gnu/linux") (setq source_dir "/home/max/src/")))
 
 (setq file_list (list
 		 "log/src/"
@@ -23,7 +23,7 @@
 ;; Appearance
 ;; ------------------------------------------------------------
 ;; @TODO - whitespace and tab view
-(add-to-list 'custom-theme-load-path (concat source_dir "dotfiles/emacs/themes/"))
+(add-to-list 'custom-theme-load-path (concat source_dir "mr-emacs/themes"))
 (setq ring-bell-function 'ignore) ;; no bell
 (load-theme 'dracula t)
 
@@ -51,7 +51,7 @@
 (set-frame-font "Iosevka 10" nil t) ;;  bitmap fonts
 
 ;; does not display line numbers by default, ps: linum-mode is very slow don't use
-(setq display-line-numbers-type t)
+(setq display-line-numbers-type 'visual)
 
 ;; Indent with of four and use tab to allow indentation
 ;; use M-i to insert tab
@@ -158,7 +158,6 @@ Version 2019-11-04 2021-02-16"
 			    (define-key dired-mode-map (kbd "C-; o") 'xah-open-in-external-app) ))
 
 ;; @TODO figure out how to fix eshell read-only mode
-(global-set-key (kbd "C-; B") 'bat_build)
 (global-set-key (kbd "C-; e") 'eshell)
 (global-set-key (kbd "C-; M-e") 'eshell-command)
 (global-set-key (kbd "C-; l") 'display-line-numbers-mode)
@@ -172,11 +171,6 @@ Version 2019-11-04 2021-02-16"
 ;; minibuffer command
 ;; todo make the output of the command open in a new frame
 ;; run and build commands
-(defun bat_build()
-	"execute make run command in eshell"
-	(interactive)
-	(eshell-command "build.bat"))
-
 (setq eshell-prompt-function
 	(lambda nil
 		(concat
@@ -218,5 +212,5 @@ Version 2019-11-04 2021-02-16"
 ;; ------------------------------------------------------------
 ;; try to load extras
 (condition-case nil
-    (load-file "extra.el")
+    (load-file (concat source_dir "/mr-emacs/extra.el"))
   (error (message-box "Could not load extras...")))
