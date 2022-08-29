@@ -25,7 +25,6 @@
 ;; @TODO - whitespace and tab view
 (add-to-list 'custom-theme-load-path (concat source_dir "mr-emacs/themes"))
 (setq ring-bell-function 'ignore) ;; no bell
-(load-theme 'dracula t)
 
 ;; some highlighting of keywords
 (global-hi-lock-mode 1)
@@ -40,25 +39,28 @@
 
 
 (display-time-mode 1) ;; This status line is not great, improve on clarity of information displayed.
-(blink-cursor-mode -1) ;; @BUG -  disable cursor blinking or evil mode in the doc-view buffer, cursor blinking disabled completely
-(global-hl-line-mode 0) ;; highlight current line
+;; @BUG -  disable cursor blinking or evil mode in the doc-view buffer, cursor blinking disabled
+;; completely
+(blink-cursor-mode -1)
+(global-hl-line-mode 1) ;; highlight current line
 ;; disable all GUI bars
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 
 
-(set-frame-font "Iosevka 10" nil t) ;;  bitmap fonts
+(set-frame-font "Iosevka 9" nil t)
 
 ;; does not display line numbers by default, ps: linum-mode is very slow don't use
 (setq display-line-numbers-type 'visual)
+(add-hook 'prog-mode-hook 'display-line-numbers-mode)
 
 ;; Indent with of four and use tab to allow indentation
 ;; use M-i to insert tab
 (setq-default tab-width 4 indent-tabs-mode t)
 
 ;; Autrowrap 120
-(setq-default fill-column 120)
+(setq-default fill-column 80)
 (setq auto-fill-mode t)
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
 (add-hook 'prog-mode-hook 'turn-on-auto-fill)
@@ -67,11 +69,20 @@
 
 ;; Org
 ;; ------------------------------------------------------------
-;; @TODO :: feature -> (org daily) -- a dashboard for tracking daily todos/goals and what was
 ;; @TODO :: beamer -> template for documents in org-mode (latex and beamer)
-(setq org-agenda-files (list (car default_buffers)))
+;; @TODO :: feature -> (org today/daily) -- a dashboard for tracking daily todos/goals and what was done
+(setq org_files (list "log/src/orthodontics.org"
+                      "log/src/research.org"
+                      "log/src/chaos.org"
+                      "log/src/life.org"))
+(setq org-agenda-files (mapcar (lambda (x) (concat source_dir x)) org_files))
 (setq org-log-done t)
 (setq org-image-actual-width nil) ;;To set image scale
+
+
+;; Diary and calendar
+;; ------------------------------------------------------------
+;; function/shortcuts to implement: open calendar, edit diary, view/update diary, link diary to org-agenda/today.org
 
 
 ;; Dired
@@ -171,16 +182,11 @@ Version 2019-11-04 2021-02-16"
 ;; minibuffer command
 ;; todo make the output of the command open in a new frame
 ;; run and build commands
+;; @BUG to change the eshell prompt you need to change the regexp
 (setq eshell-prompt-function
-	(lambda nil
-		(concat
-			(propertize "[")
-			(propertize (eshell/whoami))
-			(propertize "@")
-			(propertize (eshell/pwd))
-			(propertize "]")
-			(propertize "\n")
-			(propertize "> "))))
+      (lambda ()
+        (concat (eshell/pwd) "\n $ ")))
+(setq eshell-highlight-prompt nil)
 
 ;; Programming
 ;; ------------------------------------------------------------
@@ -203,9 +209,13 @@ Version 2019-11-04 2021-02-16"
 ;; ------------------------------------------------------------
 (setq inhibit-startup-screen t)
 (mapcar 'find-file-noselect default_buffers) ;; open silently all default buffers
-(ibuffer)
 (cd source_dir)
 (add-to-list 'write-file-functions 'delete-trailing-whitespace)
+
+;; Web and RSS
+;; ------------------------------------------------------------
+;; @TODO :: shortcuts for quick searches in ArXiv, PubMed, Wikipedia and others
+;; from an interactive command (use eww)
 
 
 ;; Extras
