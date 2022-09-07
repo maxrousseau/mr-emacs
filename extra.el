@@ -135,10 +135,18 @@
   (setq-default mode-line-format (cons '(:exec venv-current-name)
                                        mode-line-format))
   )
+;; @TODO -- configure a function to send a command to be executed by eshell (ex
+;; python main.py -debug); maybe use projectile for this?
+(add-hook 'python-mode-hook
+  (lambda ()
+    (local-set-key [f1] 'python-shell-send-buffer)
+    (local-set-key [f2] 'python-shell-send-region)
+    ))
 
-(add-hook 'venv-postactivate-hook (setq eshell-prompt-function
-                                        (lambda () (concat (eshell/pwd) " (" venv-current-name
-                                                           ")" "\n $ "))))
+;; @BUG -> this runs before activation?
+;;(add-hook 'venv-postactivate-hook (setq eshell-prompt-function
+;;                                        (lambda () (concat (eshell/pwd) " (" venv-current-name
+;;                                                           ")" "\n $ "))))
 
 
 (use-package blacken
@@ -175,7 +183,11 @@
          (load-theme other-theme t)
          (setq current-theme other-theme)
          (setq other-theme 'dracula))))
-(global-set-key (kbd))
+(global-set-key (kbd "C-; t") 'switch-theme)
+
+;; TREEMACS
+;; ===============================================================================
+;;
 
 
 ;; ORGMODE ================================================================================
