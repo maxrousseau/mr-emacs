@@ -49,10 +49,10 @@
 (scroll-bar-mode -1)
 
 
-(set-frame-font "Iosevka 9" nil t)
+(set-frame-font "Hack 9" nil t)
 
 ;; does not display line numbers by default, ps: linum-mode is very slow don't use
-(setq display-line-numbers-type 'visual)
+(setq display-line-numbers-type t)
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 
 ;; Indent with of four and use tab to allow indentation

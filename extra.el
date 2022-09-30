@@ -38,11 +38,6 @@
 ;; @TODO setup undo-redo commands (evil)
 ;; @TODO emojis
 ;; @TODO static website in org-mode (custom html/css export)
-;;(add-to-list 'load-path "C:/Users/roum5/source/dotfiles/emacs/evil-leader")
-;;(add-to-list 'load-path "C:/Users/roum5/source/dotfiles/emacs/evil")
-;;(add-to-list 'load-path "C:/Users/roum5/source/dotfiles/emacs/evil-org-mode")
-;;(add-to-list 'load-path "C:/Users/roum5/source/dotfiles/emacs/swiper")
-;;(add-to-list 'load-path "C:/Users/roum5/source/dotfiles/emacs/themes/")
 (use-package evil
   :config (evil-mode 1))
 
@@ -63,7 +58,7 @@
 
 ;;@TODO -- emoji display problem...
 
-;;@BUG this requires counsel to be installed (M-x package-install counsel from elpa)
+;;@NOTE this requires counsel to be installed (M-x package-install counsel from elpa)
 ;; @TODO -- move all keybinds to general.el
 (evil-global-set-key 'normal (kbd "/") 'swiper-isearch)
 (global-set-key (kbd "C-s") 'swiper-isearch)
@@ -120,21 +115,24 @@
            (prog-mode . company-mode)))
 
 
+;; install pyls
 (use-package eglot
   :ensure t
   :defer t
   :hook (python-mode . eglot-ensure))
-;;(eglot--executable-find "pyls" t)
 
 (use-package virtualenvwrapper
   :ensure t
   :defer t
   :custom (venv-initialize-interactive-shells)
   (venv-initialize-eshell)
-  (setq venv-location "~/.virtualenvs")
+  (cond ((string-equal system-type "windows-nt") (setq venv-location "~/Envs/"))
+      ((string-equal system-type "gnu/linux") (setq venv-location "/home/max/.virtualenvs/")))
   (setq-default mode-line-format (cons '(:exec venv-current-name)
                                        mode-line-format))
   )
+
+
 ;; @TODO -- configure a function to send a command to be executed by eshell (ex
 ;; python main.py -debug); maybe use projectile for this?
 (add-hook 'python-mode-hook
@@ -156,12 +154,28 @@
   (blacken-allow-py36 t)
   :hook (python-mode . blacken-mode))
 
+
+(use-package yasnippet
+  :ensure t
+  :defer t
+  :custom
+  (setq yas-snippets-dirs '("./snippets"))
+  (yas-reload-all)
+  :hook
+  (prog-mode . yas-minor-mode)
+  )
+;; M-x describe table
+;; M-x yas-insert-snippet
+;; tab to expand snippet
+
 ;;@TODO
 ;;> french and english spellchecker *PRIORITY*
 ;;> setup snippets
 ;;> pubsearch -- desired functionalities: pubsearch integration (browse pubmed,
 ;;arxiv abstracts with associated bibtex citation for easy import)
 
+;; EYECANDY
+;; ===============================================================================
 ;; eyecandy
 ;; other themes: doom-theme-earl-grey (light)
 (use-package solo-jazz-theme
