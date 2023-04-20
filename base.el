@@ -49,7 +49,8 @@
 (scroll-bar-mode -1)
 
 
-(set-frame-font "Hack 9" nil t)
+;;(set-frame-font "Iosevka 8" nil t)
+(set-frame-font "FiraCode Nerd Font Mono 8" nil t)
 
 ;; does not display line numbers by default, ps: linum-mode is very slow don't use
 (setq display-line-numbers-type t)
@@ -60,11 +61,14 @@
 (setq-default tab-width 4 indent-tabs-mode t)
 
 ;; Autrowrap 120
-(setq-default fill-column 80)
+(setq-default fill-column 120)
 (setq auto-fill-mode t)
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
 (add-hook 'prog-mode-hook 'turn-on-auto-fill)
-(add-hook 'org-mode-hook 'turn-on-auto-fill)
+(add-hook 'org-mode-hook (lambda ()
+						   (turn-off-auto-fill)
+						   (visual-line-mode)))
+(setq org-cycle-emulate-tab 'white)
 
 
 ;; Org
@@ -78,7 +82,8 @@
 (setq org-agenda-files (mapcar (lambda (x) (concat source_dir x)) org_files))
 (setq org-log-done t)
 (setq org-image-actual-width nil) ;;To set image scale
-
+(add-hook 'org-mode-hook 'org-indent-mode) ;; @BUG doesnt work...
+;; @TODO remove fill mode for org and just wrap line
 
 ;; Diary and calendar
 ;; ------------------------------------------------------------
@@ -224,3 +229,31 @@ Version 2019-11-04 2021-02-16"
 (condition-case nil
     (load-file (concat source_dir "/mr-emacs/extra.el"))
   (error (message-box "Could not load extras...")))
+
+
+
+;;; Uncomment if needed
+;;; It is the opposite of fill-paragraph
+(defun unfill-paragraph ()
+  "Takes a multi-line paragraph and makes it into a single line of text."
+  (interactive)
+  (let ((fill-column (point-max)))
+    (fill-paragraph nil)))
+
+(define-key global-map (kbd "<f8>") 'unfill-paragraph)
+
+;; @TODO :: writer's wrap ;; one line per sentence for orgmode and latex (can be set optionally and applied to the buffer)
+
+
+;; @TODO see if I can make this work better
+;; Own function to call Antidote on the buffer at hand
+;; https://www.reddit.com/r/emacs/comments/dtciau/comment/hlscgqr/
+(defun Antidote ()
+(interactive)
+(save-buffer)
+(write-region (point-min) (point-max) (concat buffer-file-name ".backup"))
+(auto-revert-mode)
+(let ((CmdStr (concat "Antidote \"" buffer-file-name "\" &")))
+(shell-command CmdStr nil nil))
+(redraw-frame) (redraw-display)
+)
