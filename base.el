@@ -49,8 +49,8 @@
 (scroll-bar-mode -1)
 
 
-;;(set-frame-font "Iosevka 8" nil t)
-(set-frame-font "FiraCode Nerd Font Mono 8" nil t)
+(set-frame-font "hack 8" nil t)
+;;(set-frame-font "FiraCode Nerd Font Mono 8" nil t)
 
 ;; does not display line numbers by default, ps: linum-mode is very slow don't use
 (setq display-line-numbers-type t)

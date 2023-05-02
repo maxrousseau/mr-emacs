@@ -51,6 +51,7 @@
 
 ;; MOVEMENT and KEYBINDINGS  ==================================================
 (global-set-key (kbd "C-s") 'swiper-isearch)
+(global-set-key (kbd "C-S-s") 'swiper-all)
 (defun my-god-mode-update-cursor-type ()
   (setq cursor-type (if (or god-local-mode buffer-read-only) 'box 'bar)))
 
