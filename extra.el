@@ -189,14 +189,13 @@
 
 ;; EYECANDY
 ;; ===============================================================================
-;; eyecandy
-;; other themes: doom-theme-earl-grey (light)
-;; @TODO doom-modeline + nyan.el
-;;(use-package solo-jazz-theme
-;;  :ensure t
-;;  :config
-;;  (load-theme 'solo-jazz t)
-;;  (setq current-theme 'solo-jazz))
+(use-package moody
+  :config
+  (setq x-underline-at-descent-line t)
+  (moody-replace-mode-line-buffer-identification)
+  (moody-replace-vc-mode)
+  (moody-replace-eldoc-minibuffer-message-function))
+
 (use-package doom-themes
   :ensure t
   :config
