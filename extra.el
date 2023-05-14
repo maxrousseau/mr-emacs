@@ -196,6 +196,25 @@
   (moody-replace-vc-mode)
   (moody-replace-eldoc-minibuffer-message-function))
 
+;; not working for now...
+;; (use-package all-the-icons
+;;   :ensure t
+;;   :if (display-graphic-p))
+;;
+;; (use-package all-the-icons-dired
+;;   :ensure t
+;;   :if (display-graphic-p)
+;;   :config
+;;   (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
+;;   )
+
+;;(use-package dired-sidebar
+;;  :ensure t
+;;  :commands (dired-sidebar-toggle-sidebar)
+;;  :config (bind-key* (kbd "C-; C-s") #'dired-sidebar-toggle-sidebar)
+;;  ;;(setq dired-sidebar-use-custom-font t)
+;; )
+
 (use-package doom-themes
   :ensure t
   :config
