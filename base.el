@@ -10,15 +10,17 @@
 ;;
 ;; User defined default variables
 ;; ------------------------------------------------------------
-(cond ((string-equal system-type "windows-nt") (setq source_dir "C:\\Users\\roum5\\source\\"))
-      ((string-equal system-type "gnu/linux") (setq source_dir "/home/max/src/")))
-
-(setq file_list (list
-		 "log/src/"
-		 "dotfiles/"
-         "mr-emacs"))
-
-(setq default_buffers (mapcar (lambda (x) (concat source_dir x)) file_list)) ;; concatenate to file-list
+;;(cond ((string-equal system-type "windows-nt") (setq source_dir "C:\\Users\\roum5\\source\\"))
+;;      ((string-equal system-type "gnu/linux") (setq source_dir "/home/max/src/")))
+;;(setq
+;;
+;;(setq file_list (list
+;;		 "log/src/"
+;;		 "dotfiles/"
+;;         "mr-emacs"))
+;;
+;;(setq default_buffers (mapcar (lambda (x) (concat source_dir x)) file_list)) ;; concatenate to file-list
+(setq source_dir "~/code/")
 
 ;; Appearance
 ;; ------------------------------------------------------------
@@ -49,7 +51,7 @@
 (scroll-bar-mode -1)
 
 
-(set-frame-font "hack 8" nil t)
+(set-frame-font "Hack 10" nil t)
 ;;(set-frame-font "FiraCode Nerd Font Mono 8" nil t)
 
 ;; does not display line numbers by default, ps: linum-mode is very slow don't use
@@ -93,7 +95,7 @@
 ;; Dired
 ;; ------------------------------------------------------------
 ;;@TODO setup keybind for open-with and specify app
-(setq dired-listing-switches "-l --group-directories-first")
+(setq dired-listing-switches "-l")
 ;; use external app to open file from dired, taken from xah lee
 (defun xah-open-in-external-app (&optional @fname)
   "Open the current file or dired marked files in external app.
@@ -213,7 +215,7 @@ Version 2019-11-04 2021-02-16"
 ;; Startup
 ;; ------------------------------------------------------------
 (setq inhibit-startup-screen t)
-(mapcar 'find-file-noselect default_buffers) ;; open silently all default buffers
+;;(mapcar 'find-file-noselect default_buffers) ;; open silently all default buffers
 (cd source_dir)
 (add-to-list 'write-file-functions 'delete-trailing-whitespace)
 
