@@ -205,8 +205,6 @@ Version 2019-11-04 2021-02-16"
 	    (setq-default py-indent-tabs-mode t)
 		(add-to-list 'write-file-functions 'delete-trailing-whitespace)))
 
-(setq python-shell-interpreter "ipython"
-      python-shell-interpreter-args "-i --simple-prompt --InteractiveShell.display_page=True")
 ;; How to load ipython with these commands and
 ;; %load_ext autoreload
 ;; %autoreload 2

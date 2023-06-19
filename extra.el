@@ -124,26 +124,23 @@
     :hook ((text-mode . company-mode)
            (prog-mode . company-mode)))
 
-
-;; install pyls
-(use-package eglot
-  :ensure t
-  :defer t
-  :hook (python-mode . eglot-ensure))
-
 ;; @TODO setup tabnine
 
-(use-package virtualenvwrapper
+(use-package pyvenv
   :ensure t
-  :defer t
-  :custom
-  (venv-initialize-interactive-shells)
-  (venv-initialize-eshell)
-  (cond ((string-equal system-type "windows-nt") (setq venv-location "c:/Users/roum5/Envs/"))
-      ((string-equal system-type "gnu/linux") (setq venv-location "/home/max/.virtualenvs/")))
-  (setq-default mode-line-format (cons '(:exec venv-current-name)
-                                       mode-line-format))
-  )
+  :defer t)
+
+(setenv "PATH" (concat (getenv "PATH") "/opt/homebrew/bin"))
+(setq exec-path (append exec-path '("/opt/homebrew/bin")))
+
+(use-package lsp-mode
+  ;;; :config lsp-find reference keymapping and other goodies...
+  ;;; @TODO : figure out how to expose packages to LSP or start inside of a venv.(setq lsp-keymap-prefix "C-c C-S-L")
+
+  :hook
+  ((python-mode . lsp)))
+(use-package lsp-ui
+  :commands lsp-ui-mode)
 
 
 ;; @TODO -- configure a function to send a command to be executed by eshell (ex
@@ -158,7 +155,6 @@
 ;;(add-hook 'venv-postactivate-hook (setq eshell-prompt-function
 ;;                                        (lambda () (concat (eshell/pwd) " (" venv-current-name
 ;;                                                           ")" "\n $ "))))
-
 
 (use-package blacken
   :ensure t
