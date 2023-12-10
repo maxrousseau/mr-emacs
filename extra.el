@@ -62,6 +62,8 @@
 (global-set-key (kbd "C-x C-3") 'split-window-right)
 (global-set-key (kbd "C-x C-2") 'split-window-vertically)
 (global-set-key (kbd "C-x C-0") 'delete-window)
+(global-set-key (kbd "C-; C-f") 'counsel-fzf)
+(global-set-key (kbd "C-; C-s") 'counsel-rg)
 
 (use-package god-mode
   :config
@@ -72,6 +74,8 @@
   (custom-set-faces
    '(god-mode-lighter ((t (:inherit error)))))
   (add-hook 'post-command-hook #'my-god-mode-update-cursor-type)
+  (setq god-exempt-major-modes nil)
+  (setq god-exempt-predicates nil)
   )
 
 (use-package avy
@@ -223,11 +227,11 @@
 
 (setq other-theme 'doom-earl-grey)
 
-(use-package nyan-mode
-  :config
-  (setq nyan-wavy-trail t)
-  (setq nyan-animate-nyancat t)
-  (nyan-mode 1))
+;; (use-package nyan-mode
+;;   :config
+;;   (setq nyan-wavy-trail t)
+;;   (setq nyan-animate-nyancat t)
+;;   (nyan-mode 1))
 
 ;; @TODO REFACTOR THIS - set bool IS_LIGHT, and then set light and dark themes
 (defun switch-theme ()
@@ -262,7 +266,7 @@
 
 ;; HYDRA
 ;; ===============================================================================
-;; @TODO setup fast ops for dired, if good maybe combine with god-mode and snipe to remove evil(vim)
+;; @TODO setup fast ops for dired, if good maybe combine with god-mode and snipe
 
 
 ;; TREEMACS or other (https://github.com/jojojames/dired-sidebar)
@@ -288,5 +292,103 @@
   (org-image-actual-width nil))
 (add-to-list 'org-latex-packages-alist '("" "tabularx"))
 
+(use-package org-download
+  :ensure t
+  :config
+  (add-hook 'dired-mode-hook 'org-download-enable);; Drag-and-drop to `dired`
+  )
+
+
+;; ==========================================================
+;; ORG READING MODE -- change font hook when in darkroom mode
+(defun my-darkroom-mode-hook ()
+  "Custom hook for darkroom-mode."
+  (setq buffer-face-mode-face '(:family "Verdana" :height 120))
+  (buffer-face-mode))
+
+(add-hook 'darkroom-tentative-mode-hook 'my-darkroom-mode-hook)
+(add-hook 'darkroom-tentative-mode-off-hook
+          (lambda ()
+            (buffer-face-mode -1))) ; Revert to the default face when leaving darkroom-mode
+;; ==========================================================
+
 ;; WRITING
 ;; ltex lsp, language tool with flycheck?, etc...
+
+;; NOTES and anki
+;; Define the functions (as provided earlier)
+
+(defun convert-anchored-notes-in-buffer ()
+  "Converts all occurrences of '* Anchored Note, page XXX' to '[page XXX]' in the current buffer."
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (while (re-search-forward "\\* Anchored Note, page \\([0-9]+\\)" nil t)
+      (replace-match "[page \\1]"))))
+(defun convert-anchored-notes-in-region (start end)
+  "Converts all occurrences of '* Anchored Note, page XXX' to '[page XXX]' in the selected region."
+  (interactive "r")
+  (save-excursion
+    (narrow-to-region start end)
+    (goto-char (point-min))
+    (while (re-search-forward "\\* Anchored Note, page \\([0-9]+\\)" nil t)
+      (replace-match "[page \\1]"))
+    (widen)))
+
+
+(defun wrap-with-c1-tags (start end)
+  "Wraps the selected region with '{{c1:' before and '}}' after."
+  (interactive "r")
+  (save-excursion
+    (narrow-to-region start end)
+    (goto-char (point-min))
+    (insert "{{c1:")
+    (goto-char (point-max))
+    (insert "}}")
+    (widen)))
+
+(defun convert-org-to-inline-html (start end)
+  "Converts selected Org mode snippet to inline HTML."
+  (interactive "r")
+  (let ((org-content (buffer-substring-no-properties start end))
+        (html-content ""))
+    (with-temp-buffer
+      (insert org-content)
+      (org-mode)
+      (setq html-content (org-export-string-as (buffer-string) 'html t
+                                               '((standalone . nil)
+                                                 (html-inline-images . t)
+                                                 (html-style-include-default . nil)
+                                                 (section-numbers . nil)
+                                                 (with-toc . nil)))))
+    (delete-region start end)
+    (insert (replace-regexp-in-string "\n" "" html-content))
+    (insert " |")))
+
+;; Define the minor mode
+(define-minor-mode anki-edit-mode
+  "A minor mode for custom functions."
+  :lighter " AnkiEd"
+  :keymap (let ((map (make-sparse-keymap)))
+            (define-key map (kbd "C-c b") 'convert-anchored-notes-in-buffer)
+            (define-key map (kbd "C-c a") 'convert-anchored-notes-in-region)
+            (define-key map (kbd "C-c w") 'wrap-with-c1-tags)
+            (define-key map (kbd "C-c h") 'convert-org-to-inline-html)
+            map)
+  (if anki-edit-mode
+      (progn
+        (auto-fill-mode -1) ; Disable auto-fill-mode
+        ;; Additional setup code when my-custom-mode is activated goes here
+      )
+    (auto-fill-mode 1)))
+
+;; Activate the minor mode
+;;(my-custom-mode 1)
+
+
+;; publishing org-NOTES
+
+(use-package ox-hugo
+  :ensure t   ;Auto-install the package from Melpa
+  :pin melpa  ;`package-archives' should already have ("melpa" . "https://melpa.org/packages/")
+  :after ox)

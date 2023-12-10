@@ -50,12 +50,18 @@
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 
+;; other stuff
+(load-file (concat source_dir "/mr-emacs/secret.el"))
 
-(set-frame-font "Hack 10" nil t)
-;;(set-frame-font "FiraCode Nerd Font Mono 8" nil t)
+;;(set-frame-font "Hack 11" nil t)
+;;(set-frame-font "FiraCode Nerd Font 12" nil t)
+;;(set-frame-font "Monoid Nerd Font 10" nil t)
+(set-frame-font "BlexMono Nerd Font 12" nil t)
+;;(set-frame-font "Monaco 11" nil t)
+
 
 ;; does not display line numbers by default, ps: linum-mode is very slow don't use
-(setq display-line-numbers-type t)
+(setq display-line-numbers-type 'relative)
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 
 ;; Indent with of four and use tab to allow indentation
@@ -71,7 +77,6 @@
 						   (turn-off-auto-fill)
 						   (visual-line-mode)))
 (setq org-cycle-emulate-tab 'white)
-
 
 ;; Org
 ;; ------------------------------------------------------------
@@ -169,6 +174,8 @@ Version 2019-11-04 2021-02-16"
 (eval-after-load "org" '(progn
 						  (define-key org-mode-map (kbd "C-c a") 'org-agenda)
 						  (define-key org-mode-map (kbd "C-; /") 'counsel-org-goto-all)))
+;; @TODO org bold word
+;; @TODO toggle-nice-view (darkroom, +inline images, +change to more legible font - Helvetica)
 (add-hook 'org-beamer-mode-hook
 		  (lambda () (local-set-key (kbd "C-; e") 'org-beamer-select-environment)))
 
@@ -179,7 +186,7 @@ Version 2019-11-04 2021-02-16"
 (global-set-key (kbd "C-; e") 'eshell)
 (global-set-key (kbd "C-; M-e") 'eshell-command)
 (global-set-key (kbd "C-; l") 'display-line-numbers-mode)
-
+(add-hook 'eshell-mode-hook (lambda () (setenv "TERM" "xterm-256color")))
 (global-set-key (kbd "M-p") 'backward-paragraph)
 (global-set-key (kbd "M-n") 'forward-paragraph)
 
@@ -227,7 +234,7 @@ Version 2019-11-04 2021-02-16"
 ;; ------------------------------------------------------------
 ;; try to load extras
 (condition-case nil
-    (load-file (concat source_dir "/mr-emacs/extra.el"))
+     (load-file (concat source_dir "/mr-emacs/extra.el"))
   (error (message-box "Could not load extras...")))
 
 
