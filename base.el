@@ -57,7 +57,7 @@
 (scroll-bar-mode -1)
 
 ;; other stuff
-(load-file (concat source_dir "/mr-emacs/secret.el"))
+(load-file (concat source_dir "/mr-emacs/modules/secret.el"))
 
 (set-frame-font "Hack 12" nil t)
 ;;(set-frame-font "FiraCode Nerd Font 12" nil t)

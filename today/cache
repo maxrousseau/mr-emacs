@@ -1,1 +1,0 @@
-(#s(hash-table test equal data ("id" 2 "name" "read ml interpretability book" "type" "🧪research" "created" "07-08-2024" "status" 0)) #s(hash-table test equal data ("id" 1 "name" "implement basic functionalities for today.el" "type" "✍️personal" "created" "07-08-2024" "status" 0)))

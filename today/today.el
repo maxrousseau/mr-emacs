@@ -1,15 +1,6 @@
 ;;; today-mode.el --- major mode for daily planning  -*- lexical-binding: t; -*-
 ;;; a minimal task tracker
 
-(define-derived-mode today-mode text-mode "today"
-  "Major mode for tracking daily tasks."
-  (setq font-lock-defaults '((("\\[\\([^]]+\\)\\]" 1 font-lock-type-face)   ; Matches text inside brackets
-                              ("\\<todo\\>" . font-lock-keyword-face)
-							  ("\\<wip\\>" . font-lock-keyword-face)
-							  ("\\<done\\>" . font-lock-keyword-face))
-                             nil nil nil nil))
-  (use-local-map today-mode-map))
-
 ;; CONFIGURATION ================================================================================
 ;; open buffer and create state
 (defvar date-var (format-time-string "%d-%m-%Y"))
@@ -154,6 +145,17 @@
 (if (file-exists-p (expand-file-name "~/.today_cache"))
 	(setq today-state-var (load-list-of-hash-tables-from-file "~/.today_cache"))
   (setq today-state-var ()))
+
+(define-derived-mode today-mode text-mode "today"
+  "Major mode for tracking daily tasks."
+  (setq font-lock-defaults '((("\\[\\([^]]+\\)\\]" 1 font-lock-type-face)   ; Matches text inside brackets
+                              ("\\<todo\\>" . font-lock-keyword-face)
+							  ("\\<wip\\>" . font-lock-keyword-face)
+							  ("\\<done\\>" . font-lock-keyword-face))
+                             nil nil nil nil))
+  (use-local-map today-mode-map))
+
+
 
 ;; @TODO ================================================================================
 ;; eye candy (centered buffer, emoji for status and flags, fonts and etc.) + progressbar
