@@ -20,7 +20,7 @@
     (switch-to-buffer buffer-name)
     (unless (eq major-mode 'today-mode)
       (today-mode))
-      (insert (concat date-var "\n\n"))
+      (insert (concat "TODAY is " date-var ", do stuff 🔥 " "\n\n"))
       (insert "🎯 Tasks:\n")
 	  (dotimes (index (length today-state-var))
 		(insert (concat "\t" (fmt-task (nth index today-state-var)))))
@@ -140,6 +140,10 @@
     map)
   "Keymap for `today-mode'.")
 
+;; MARGINS ================================================================================
+;; would be nice to have the list centered on the screen...
+
+
 ;; STARTUP  ================================================================================
 ;; load previous state
 (if (file-exists-p (expand-file-name "~/.today_cache"))
@@ -154,7 +158,6 @@
 							  ("\\<done\\>" . font-lock-keyword-face))
                              nil nil nil nil))
   (use-local-map today-mode-map))
-
 
 
 ;; @TODO ================================================================================
