@@ -1,11 +1,13 @@
-#+TITLE: mr-emacs
-#+SUBTITLE: A minimal emacs configuration
 
-* Motivation
+* mr-emacs
+
+A minimal emacs configuration
+
+** Motivation
 
 Emacs is great out of the box. This project aims to create a simple configuration which contains the minimum viable components to make it a complete user interface.
 
-* Contents
+** Contents
 
 #+begin_src
   mr-emacs/
