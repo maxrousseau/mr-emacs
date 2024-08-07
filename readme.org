@@ -1,0 +1,16 @@
+#+TITLE: MR-EMACS
+#+SUBTITLE: A minimal emacs configuration
+
+* Motivation
+
+Emacs is great out of the box. This project aims to create a simple configuration which contains the minimum viable components to make it a complete user interface.
+
+* Contents
+
+#+begin_src sh
+  modules/    # modular configuration files (i.e. python, motion, etc)
+  today/      # today.el is a major-mode to track task
+  themes/     # a light and dark themer
+  simple.el   # the core file containing the initialization filer
+  init.el     # symlink this file to ~/.emacs.d/init.el
+#+end_src
