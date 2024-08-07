@@ -1,4 +1,4 @@
-#+TITLE: MR-EMACS
+#+TITLE: mr-emacs
 #+SUBTITLE: A minimal emacs configuration
 
 * Motivation
