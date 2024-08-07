@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: basic-card
+# key: bc
+# --
+
+$1? | $2

@@ -22,6 +22,12 @@
 ;;(setq default_buffers (mapcar (lambda (x) (concat source_dir x)) file_list)) ;; concatenate to file-list
 (setq source_dir "~/code/")
 
+
+;; env vars
+(setenv "PATH"
+		(concat "/Library/TeX/texbin" ":"
+				(getenv "PATH")))
+
 ;; Appearance
 ;; ------------------------------------------------------------
 ;; @TODO - whitespace and tab view
@@ -53,10 +59,10 @@
 ;; other stuff
 (load-file (concat source_dir "/mr-emacs/secret.el"))
 
-;;(set-frame-font "Hack 11" nil t)
+(set-frame-font "Hack 12" nil t)
 ;;(set-frame-font "FiraCode Nerd Font 12" nil t)
 ;;(set-frame-font "Monoid Nerd Font 10" nil t)
-(set-frame-font "BlexMono Nerd Font 12" nil t)
+;;(set-frame-font "BlexMono Nerd Font 12" nil t)
 ;;(set-frame-font "Monaco 11" nil t)
 
 
@@ -81,7 +87,7 @@
 ;; Org
 ;; ------------------------------------------------------------
 ;; @TODO :: beamer -> template for documents in org-mode (latex and beamer)
-;; @TODO :: feature -> (org today/daily) -- a dashboard for tracking daily todos/goals and what was done
+
 (setq org_files (list "log/src/orthodontics.org"
                       "log/src/research.org"
                       "log/src/chaos.org"
@@ -90,6 +96,7 @@
 (setq org-log-done t)
 (setq org-image-actual-width nil) ;;To set image scale
 (add-hook 'org-mode-hook 'org-indent-mode) ;; @BUG doesnt work...
+
 ;; @TODO remove fill mode for org and just wrap line
 
 ;; Diary and calendar
@@ -219,10 +226,19 @@ Version 2019-11-04 2021-02-16"
 
 ;; Startup
 ;; ------------------------------------------------------------
+;; @TODO :: feature -> (org today/daily) -- a dashboard for tracking daily todos/goals and what was done
 (setq inhibit-startup-screen t)
 ;;(mapcar 'find-file-noselect default_buffers) ;; open silently all default buffers
 (cd source_dir)
 (add-to-list 'write-file-functions 'delete-trailing-whitespace)
+(load-file (concat source_dir "/mr-emacs/today/today.el"))
+(define-key global-map (kbd "C-; C-t") 'open-daily-tasks)
+(open-daily-tasks)
+
+;; default window size
+(add-to-list 'default-frame-alist '(height . 60))
+(add-to-list 'default-frame-alist '(width . 180))
+
 
 ;; Web and RSS
 ;; ------------------------------------------------------------
@@ -236,7 +252,6 @@ Version 2019-11-04 2021-02-16"
 (condition-case nil
      (load-file (concat source_dir "/mr-emacs/extra.el"))
   (error (message-box "Could not load extras...")))
-
 
 
 ;;; Uncomment if needed

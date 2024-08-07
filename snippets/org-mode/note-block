@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: new noteblock
+# key: nb
+# --
+
+** $1
+
+$2
+
+#+BEGIN_SRC
+$3
+#+END_SRC

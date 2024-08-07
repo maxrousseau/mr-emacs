@@ -1,23 +1,37 @@
-;; Extra emacs config
-;;		> load and setup bells and whistles with 3rd party packages
-;;
-;;             /\
-;; /vvvvvvvvvvvv \--------------------------------------,
-;; `^^^^^^^^^^^^ /====================================="
-;;             \/
-;;
-;; ================================================================================
-;;
-;; Packages:
-;;  Yasnippets
-;;  Flymake(flycheck)
-;;  Eglot (lsp), Company, python-jedi (?)
-;;  Swiper, ivy, counsel
-;;
-;; Implement flycheck/make, which-key, hydra, eldoc-box, popper.el (for eshell),
-;;
-;;
-;; SETUP ================================================================================
+;;; simple.el --- less is more, a configuration -*- lexical-binding: t -*-
+
+;; Author: Maxime Rousseau
+;; Maintainer: Maxime Rousseau
+;; Version: 0.1
+;; Package-Requires: (tbd)
+;; Homepage: None
+;; Keywords: config
+
+
+;; This file is not part of GNU Emacs
+
+;; This program is free software: you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+
+;;; Commentary:
+
+;;; a bare minimum configuration for the tool minimalist who just wants something simple that works.
+;;; goal a <300LOC config that is legible and sufficient
+
+(provide 'simple)
+
+;; packaging
 (require 'package)
 (add-to-list 'package-archives '("gnu"   . "https://elpa.gnu.org/packages/"))
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
@@ -34,20 +48,162 @@
 (eval-when-compile
   (require 'use-package))
 
-;; @TODO setup undo-redo commands
+;; environment variables
+(setenv "PATH"
+		(concat "/Library/TeX/texbin" ":"
+				(getenv "PATH")))
 
-;; @NOTE
-;; consider replacing all movement keybindings with god mode, with avy or ace-jump-mode
-;; consider moving all function keybindings to hydra...
-;; keys -> M-? (?), n p b f (simplify mvt)
+;; startup
+(setq inhibit-startup-screen t)
+(cd "~/code")
+
+;; other functions
+(load-file "~/code/secret.el")
+
+;; swiper setup
+(use-package ivy
+  :config
+  (ivy-mode 1)
+  (setq ivy-use-virtual-buffers t)
+  (setq ivy-count-format "(%d/%d) "))
+(use-package swiper)
+(use-package counsel)
+
+;; appearance
+(setq ring-bell-function 'ignore) ;; no bell
+(global-hi-lock-mode 1) ;; can't remember what this does
+
+(defun meta_highlight()
+  (interactive)
+  "highlight todos, notes and more"
+  (highlight-regexp "@TODO" 'hi-pink)
+  (highlight-regexp "@BUG" 'hi-red)
+  (highlight-regexp "@HERE" 'hi-green)
+  (highlight-regexp "@NOTE" 'hi-blue))
+(add-hook 'find-file-hook (lambda () (meta_highlight)))
 
 
-;; @TODO static website in org-mode (custom html/css export)
-;;@NOTE this requires counsel to be installed (M-x package-install counsel from elpa)
-;; @TODO -- move all keybinds to general.el
+(display-time-mode 1) ;; This status line is not great, improve on clarity of information displayed.
+(blink-cursor-mode -1)
+(global-hl-line-mode 1) ;; highlight current line
+;; disable all GUI bars
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+
+;; fonts
+(set-frame-font "Hack 12" nil t)
+
+;; line numbering and indentation
+(setq display-line-numbers-type 'relative)
+(add-hook 'prog-mode-hook 'display-line-numbers-mode)
+(setq-default tab-width 4 indent-tabs-mode t)
+
+;; autrowrap 120
+(setq-default fill-column 120)
+(setq auto-fill-mode t)
+(add-hook 'text-mode-hook 'turn-on-auto-fill)
+(add-hook 'prog-mode-hook 'turn-on-auto-fill)
+
+;; org
+(setq org-cycle-emulate-tab 'white)
+(add-hook 'org-mode-hook (lambda ()
+						   (turn-off-auto-fill)
+						   (visual-line-mode)))
+(setq org-image-actual-width nil) ;;To set image scale
+(add-hook 'org-mode-hook 'org-indent-mode) ;; not sure this works
 
 
-;; MOVEMENT and KEYBINDINGS  ==================================================
+;; dired
+(setq dired-listing-switches "-l")
+
+;; Use external app to open file from dired, taken from xah lee
+(defun xah-open-in-external-app (&optional @fname)
+"Open the current file ( @FNAME ) or Dired marked files in external app.
+	When called in Emacs Lisp, if @fname is given, open that.
+	URL `http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.html'
+	Version 2019-11-04 2021-02-16"
+  (interactive)
+  (let* (
+         ($file-list
+          (if @fname
+              (progn (list @fname))
+            (if (string-equal major-mode "dired-mode")
+                (dired-get-marked-files)
+              (list (buffer-file-name)))))
+         ($do-it-p (if (<= (length $file-list) 5)
+                       t
+                     (y-or-n-p "Open more than 5 files? "))))
+    (when $do-it-p
+      (cond
+       ((string-equal system-type "windows-nt")
+        (mapc
+         (lambda ($fpath)
+           (shell-command (concat "PowerShell -Command \"Invoke-Item -LiteralPath\" " "'" (shell-quote-argument (expand-file-name $fpath )) "'")))
+         $file-list))
+       ((string-equal system-type "darwin")
+        (mapc
+         (lambda ($fpath)
+           (shell-command
+            (concat "open " (shell-quote-argument $fpath))))  $file-list))
+       ((string-equal system-type "gnu/linux")
+        (mapc
+         (lambda ($fpath) (let ((process-connection-type nil))
+                            (start-process "" nil "xdg-open" $fpath))) $file-list))))))
+
+(add-hook 'dired-mode-hook
+	  (lambda ()
+	    (dired-hide-details-mode) ))
+
+
+;; backup
+(let ((backup-dir "~/.emacs.d/Emacs/backups")
+      (auto-saves-dir "~/.emacs.d/Emacs/autosavedir/")
+      )
+  (dolist (dir (list backup-dir auto-saves-dir))
+    (when (not (file-directory-p dir))
+      (make-directory dir t)))
+  (setq backup-directory-alist `(("." . ,backup-dir))
+        auto-save-file-name-transforms `((".*" ,auto-saves-dir))
+        auto-save-list-file-prefix (concat auto-saves-dir ".saves-")
+        tramp-backup-directory-alist `((".*" . ,backup-dir))
+        tramp-auto-save-directory auto-saves-dir
+        )
+  )
+(setq backup-by-copying t    ; Don't delink hardlinks
+      delete-old-versions t  ; Clean up the backups
+      version-control t      ; Use version numbers on backups,
+      kept-new-versions 3    ; keep some new versions
+      kept-old-versions 2)   ; and some old ones, too
+
+;; eshell
+(setq eshell-prompt-function
+      (lambda ()
+        (concat (eshell/pwd) "\n $ ")))
+(setq eshell-highlight-prompt nil)
+
+;; keybindings
+;; some other kbd
+(global-set-key (kbd "C-; n") 'make-frame)
+(global-set-key (kbd "C-; c") 'delete-frame)
+(global-set-key (kbd "C-; b") 'ibuffer)
+
+(eval-after-load "org" '(progn
+						  (define-key org-mode-map (kbd "C-c a") 'org-agenda)
+						  (define-key org-mode-map (kbd "C-; /") 'counsel-org-goto-all)))
+(add-hook 'org-beamer-mode-hook
+		  (lambda () (local-set-key (kbd "C-; e") 'org-beamer-select-environment)))
+
+(eval-after-load "dired" '(progn
+			    (define-key dired-mode-map (kbd "C-; o") 'xah-open-in-external-app) ))
+
+(global-set-key (kbd "C-; e") 'eshell)
+(global-set-key (kbd "C-; M-e") 'eshell-command)
+(global-set-key (kbd "C-; l") 'display-line-numbers-mode)
+(add-hook 'eshell-mode-hook (lambda () (setenv "TERM" "xterm-256color")))
+(global-set-key (kbd "M-p") 'backward-paragraph)
+(global-set-key (kbd "M-n") 'forward-paragraph)
+
 (global-set-key (kbd "C-s") 'swiper-isearch)
 (global-set-key (kbd "C-S-s") 'swiper-all)
 
@@ -57,7 +213,6 @@
 ;; @TODO C-S-n p f b bind to the faster movements? instead of using meta...
 ;; @TODO bind avy jump mode to C-S-f should be easier for all big movements
 (global-set-key (kbd "C-x C-b") 'ivy-switch-buffer)
-(global-set-key (kbd "C-; C-a") 'avy-goto-char-2)
 
 (use-package ace-window
   :config
@@ -77,28 +232,27 @@
   (add-hook 'post-command-hook #'my-god-mode-update-cursor-type)
   (setq god-exempt-major-modes nil)
   (setq god-exempt-predicates nil)
-  (god-mode-all)
   ) ;; rebind esc to ctrl for ease of use
 
 (use-package avy
   :config
   (global-set-key (kbd "C-r") 'avy-goto-char-2))
 
-;; swiper setup
-(use-package ivy
-  :config
-  (ivy-mode 1)
-  (setq ivy-use-virtual-buffers t)
-  (setq ivy-count-format "(%d/%d) "))
-(use-package swiper)
-(use-package counsel)
+;; programming
+(icomplete-mode t)
+(add-hook 'python-mode-hook
+    (lambda ()
+	    (setq-default indent-tabs-mode nil)
+	    (setq-default tab-width 4)
+	    (setq-default py-indent-tabs-mode t)
+		(add-to-list 'write-file-functions 'delete-trailing-whitespace)))
+
+;;; simple.el ends here
 
 
-;; PYTHON ================================================================================
-;; @TODO documentation lookup***
-;; @TODO dap-mode configuration for debugging
-;; @TODO projectile setup
-;; @TODO setup tabnine
+;;; not cleaned yet is below ------------------
+
+
 
 ;; build function to execute program
 ;; flymake of flycheck setup
@@ -153,32 +307,6 @@
   ;; `global-corfu-modes' to exclude certain modes.
   :init
   (global-corfu-mode))
-
-(use-package pyvenv
-  :ensure t
-  :defer t)
-
-(setenv "PATH" (concat (getenv "PATH") "/opt/homebrew/bin"))
-(setq exec-path (append exec-path '("/opt/homebrew/bin")))
-
-(add-hook 'python-mode-hook 'eglot-ensure)
-
-
-;; @TODO -- configure a function to send a command to be executed by eshell (ex
-;; python main.py -debug); maybe use projectile for this?
-(add-hook 'python-mode-hook
-  (lambda ()
-    (local-set-key [f1] 'python-shell-send-buffer)
-    (local-set-key [f2] 'python-shell-send-defun)
-    ))
-
-(use-package blacken
-  :ensure t
-  :defer t
-  :custom
-  (blacken-allow-py36 t)
-  :hook (python-mode . blacken-mode))
-
 
 (use-package yasnippet
   :ensure t
@@ -253,7 +381,7 @@
 ;     ef-themes-variable-pitch-ui nil)
 ;; Global settings (defaults)
 ;;(ef-themes-select 'ef-elea-dark)
-(load-theme 'oldlace)
+(load-theme 'dracula)
 
 
 ;; (use-package nyan-mode
@@ -437,8 +565,6 @@
 
 (plist-put org-format-latex-options :scale 2)
 
-
-
 ;; ==========================================================
 ;; ORG READING MODE -- change font hook when in darkroom mode
 (defun my-darkroom-mode-hook ()
@@ -450,86 +576,3 @@
 (add-hook 'darkroom-tentative-mode-off-hook
           (lambda ()
             (buffer-face-mode -1))) ; Revert to the default face when leaving darkroom-mode
-
-
-;; ==========================================================
-
-;; WRITING
-;; ltex lsp, language tool with flycheck?, etc...
-
-;; NOTES and anki
-;; Define the functions (as provided earlier)
-
-(defun convert-anchored-notes-in-buffer ()
-  "Converts all occurrences of '* Anchored Note, page XXX' to '[page XXX]' in the current buffer."
-  (interactive)
-  (save-excursion
-    (goto-char (point-min))
-    (while (re-search-forward "\\* Anchored Note, page \\([0-9]+\\)" nil t)
-      (replace-match "[page \\1]"))))
-
-(defun convert-anchored-notes-in-region (start end)
-  "Converts all occurrences of '* Anchored Note, page XXX' to '[page XXX]' in the selected region."
-  (interactive "r")
-  (save-excursion
-    (narrow-to-region start end)
-    (goto-char (point-min))
-    (while (re-search-forward "\\* Anchored Note, page \\([0-9]+\\)" nil t)
-      (replace-match "[page \\1]"))
-    (widen)))
-
-(defun wrap-with-c1-tags (start end)
-  "Wraps the selected region with '{{c1:' before and '}}' after."
-  (interactive "r")
-  (save-excursion
-    (narrow-to-region start end)
-    (goto-char (point-min))
-    (insert "{{c1:")
-    (goto-char (point-max))
-    (insert "}}")
-    (widen)))
-
-(defun convert-org-to-inline-html (start end)
-  "Converts selected Org mode snippet to inline HTML."
-  (interactive "r")
-  (let ((org-content (buffer-substring-no-properties start end))
-        (html-content ""))
-    (with-temp-buffer
-      (insert org-content)
-      (org-mode)
-      (setq html-content (org-export-string-as (buffer-string) 'html t
-                                               '((standalone . nil)
-                                                 (html-inline-images . t)
-                                                 (html-style-include-default . nil)
-                                                 (section-numbers . nil)
-                                                 (toc . 0)))))
-    (delete-region start end)
-    (insert (replace-regexp-in-string "\n" "" html-content))
-    (insert " |")))
-
-;; Define the minor mode
-(define-minor-mode anki-edit-mode
-  "A minor mode for custom functions."
-  :lighter " AnkiEd"
-  :keymap (let ((map (make-sparse-keymap)))
-            (define-key map (kbd "C-c b") 'convert-anchored-notes-in-buffer)
-            (define-key map (kbd "C-c a") 'convert-anchored-notes-in-region)
-            (define-key map (kbd "C-c w") 'wrap-with-c1-tags)
-            (define-key map (kbd "C-c h") 'convert-org-to-inline-html)
-            map)
-  (if anki-edit-mode
-      (progn
-        (auto-fill-mode -1) ; Disable auto-fill-mode
-        ;; Additional setup code when my-custom-mode is activated goes here
-      )
-    (auto-fill-mode 1)))
-
-;; Activate the minor mode
-;;(my-custom-mode 1)
-
-;; publishing org-NOTES
-
-(use-package ox-hugo
-  :ensure t   ;Auto-install the package from Melpa
-  :pin melpa  ;`package-archives' should already have ("melpa" . "https://melpa.org/packages/")
-  :after ox)

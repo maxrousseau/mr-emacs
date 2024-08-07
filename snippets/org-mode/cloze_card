@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: cloze-card
+# key: cc
+# --
+
+$1 \{\{c1::$2\}\} $3 |
