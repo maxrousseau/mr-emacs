@@ -19,7 +19,7 @@ Emacs is great out of the box. This project aims to create a simple configuratio
     init.el     # symlink this file to ~/.emacs.d/init.el
 #+end_src
 
-- [ ] [[file:mr-simple.el][base configuration]] : basic configuration settings (i.e. fonts, colorscheme, package setup, etc.)
+- [ ] [[file:./mr-simple.el][base configuration]] basic configuration settings (i.e. fonts, colorscheme, package setup, etc.)
 - [ ] [[file:modules/mr-motion.el][motions]] : god-mode modal editing and other movement settings
 - [ ] [[file:modules/mr-orgmode.el][orgmode]]
 - [ ] [[file:modules/mr-python.el][python]]
