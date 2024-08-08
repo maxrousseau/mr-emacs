@@ -1,9 +1,10 @@
 * mr-emacs
 
 A minimal emacs configuration.
-<img src="file:./media/mr-emacs-mascott.png" alt="Header Image" width="300" />
+
 #+BEGIN_CENTER
-<img src="file:./media/mr-emacs-mascott.png" alt="Header Image" width="300" />
+#+ATTR_HTML: :width 300px
+[[file:./media/mr-emacs-mascott.png]]
 #+END_CENTER
 
 ** Motivation
