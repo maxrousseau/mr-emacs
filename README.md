@@ -36,5 +36,5 @@ Emacs is great out of the box. This project aims to create a simple configuratio
 -   [ ] [orgmode](modules/mr-orgmode.el)
 -   [ ] [python](modules/mr-python.el)
 -   [ ] [eshell](modules/mr-eshell.el)
--   [-] [today](today/today.el) : a simple task tracker (WIP)
+-   [x] [today](today/today.el) : a simple task tracker (WIP)
 -   [ ] [ai](modules/mr-ai.el) : (whisper and GPT calls)
