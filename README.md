@@ -1,6 +1,7 @@
+
+<div class="header" align="center">
+
 # mr-emacs
-
-
 
 <div class="logo">
 <p align="center">
@@ -9,6 +10,9 @@
 A minimal emacs configuration.
 </p>
 </div>
+
+</div>
+
 
 
 ## Motivation
