@@ -3,7 +3,7 @@
 A minimal emacs configuration.
 
 #+BEGIN_CENTER
-#+ATTR_HTML: :width 300px
+#+ATTR_HTML: :width 100px
 [[file:./media/mr-emacs-mascott.png]]
 #+END_CENTER
 
