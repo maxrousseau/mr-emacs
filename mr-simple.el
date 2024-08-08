@@ -48,7 +48,7 @@
 (eval-when-compile
   (require 'use-package))
 
-;; environment variables
+;; maybe this should be in another file?
 (setenv "PATH"
 		(concat "/Library/TeX/texbin" ":"
 				(getenv "PATH")))
@@ -57,7 +57,7 @@
 (setq inhibit-startup-screen t)
 (cd "~/code")
 
-;; other functions
+;; @TODO :: other functions make this
 (load-file "~/code/secret.el")
 
 ;; swiper setup
@@ -69,8 +69,9 @@
 (use-package swiper)
 (use-package counsel)
 
-;; appearance
+										; appearances ;;;;;;;;;;;;;;;;;;;;;;;;;
 (setq ring-bell-function 'ignore) ;; no bell
+
 (global-hi-lock-mode 1) ;; can't remember what this does
 
 (defun meta_highlight()
@@ -86,36 +87,29 @@
 (display-time-mode 1) ;; This status line is not great, improve on clarity of information displayed.
 (blink-cursor-mode -1)
 (global-hl-line-mode 1) ;; highlight current line
-;; disable all GUI bars
-(menu-bar-mode -1)
+(menu-bar-mode -1) ;; disable all GUI bars
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 
-;; fonts
-(set-frame-font "Hack 12" nil t)
+(set-frame-font "Hack 12" nil t) ;; fonts
 
-;; line numbering and indentation
-(setq display-line-numbers-type 'relative)
+
+(setq display-line-numbers-type 'relative) ;; line numbering and indentation
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 (setq-default tab-width 4 indent-tabs-mode t)
 
-;; autrowrap 120
-(setq-default fill-column 120)
+(setq-default fill-column 120) ;; autrowrap 120 (80 is a bit extreme)
 (setq auto-fill-mode t)
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
 (add-hook 'prog-mode-hook 'turn-on-auto-fill)
 
-;; org
-(setq org-cycle-emulate-tab 'white)
-(add-hook 'org-mode-hook (lambda ()
-						   (turn-off-auto-fill)
-						   (visual-line-mode)))
-(setq org-image-actual-width nil) ;;To set image scale
-(add-hook 'org-mode-hook 'org-indent-mode) ;; not sure this works
-
-
-;; dired
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+										;            dired settings           ;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (setq dired-listing-switches "-l")
+(add-hook 'dired-mode-hook
+	  (lambda ()
+	    (dired-hide-details-mode) ))
 
 ;; Use external app to open file from dired, taken from xah lee
 (defun xah-open-in-external-app (&optional @fname)
@@ -151,12 +145,9 @@
          (lambda ($fpath) (let ((process-connection-type nil))
                             (start-process "" nil "xdg-open" $fpath))) $file-list))))))
 
-(add-hook 'dired-mode-hook
-	  (lambda ()
-	    (dired-hide-details-mode) ))
-
-
-;; backup
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+										;      emacs backup file location     ;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (let ((backup-dir "~/.emacs.d/Emacs/backups")
       (auto-saves-dir "~/.emacs.d/Emacs/autosavedir/")
       )
@@ -176,138 +167,9 @@
       kept-new-versions 3    ; keep some new versions
       kept-old-versions 2)   ; and some old ones, too
 
-;; eshell
-(setq eshell-prompt-function
-      (lambda ()
-        (concat (eshell/pwd) "\n $ ")))
-(setq eshell-highlight-prompt nil)
-
-;; keybindings
-;; some other kbd
-(global-set-key (kbd "C-; n") 'make-frame)
-(global-set-key (kbd "C-; c") 'delete-frame)
-(global-set-key (kbd "C-; b") 'ibuffer)
-
-(eval-after-load "org" '(progn
-						  (define-key org-mode-map (kbd "C-c a") 'org-agenda)
-						  (define-key org-mode-map (kbd "C-; /") 'counsel-org-goto-all)))
-(add-hook 'org-beamer-mode-hook
-		  (lambda () (local-set-key (kbd "C-; e") 'org-beamer-select-environment)))
-
-(eval-after-load "dired" '(progn
-			    (define-key dired-mode-map (kbd "C-; o") 'xah-open-in-external-app) ))
-
-(global-set-key (kbd "C-; e") 'eshell)
-(global-set-key (kbd "C-; M-e") 'eshell-command)
-(global-set-key (kbd "C-; l") 'display-line-numbers-mode)
-(add-hook 'eshell-mode-hook (lambda () (setenv "TERM" "xterm-256color")))
-(global-set-key (kbd "M-p") 'backward-paragraph)
-(global-set-key (kbd "M-n") 'forward-paragraph)
-
-(global-set-key (kbd "C-s") 'swiper-isearch)
-(global-set-key (kbd "C-S-s") 'swiper-all)
-
-(defun my-god-mode-update-cursor-type ()
-  (setq cursor-type (if (or god-local-mode buffer-read-only) 'box 'bar)))
-
-;; @TODO C-S-n p f b bind to the faster movements? instead of using meta...
-;; @TODO bind avy jump mode to C-S-f should be easier for all big movements
-(global-set-key (kbd "C-x C-b") 'ivy-switch-buffer)
-
-(use-package ace-window
-  :config
-  (global-set-key (kbd "C-x C-o") 'ace-window))
-
-(global-set-key (kbd "C-x C-3") 'split-window-right)
-(global-set-key (kbd "C-x C-2") 'split-window-vertically)
-(global-set-key (kbd "C-x C-0") 'delete-window)
-(global-set-key (kbd "C-; C-f") 'counsel-fzf)
-(global-set-key (kbd "C-; C-s") 'counsel-rg)
-
-(use-package god-mode
-  :config
-  (global-set-key (kbd "C-q") #'god-mode-all)
-  (custom-set-faces
-   '(god-mode-lighter ((t (:inherit error)))))
-  (add-hook 'post-command-hook #'my-god-mode-update-cursor-type)
-  (setq god-exempt-major-modes nil)
-  (setq god-exempt-predicates nil)
-  ) ;; rebind esc to ctrl for ease of use
-
-(use-package avy
-  :config
-  (global-set-key (kbd "C-r") 'avy-goto-char-2))
-
-;; programming
-(icomplete-mode t)
-(add-hook 'python-mode-hook
-    (lambda ()
-	    (setq-default indent-tabs-mode nil)
-	    (setq-default tab-width 4)
-	    (setq-default py-indent-tabs-mode t)
-		(add-to-list 'write-file-functions 'delete-trailing-whitespace)))
-
-;;; simple.el ends here
-
-
-;;; not cleaned yet is below ------------------
-
-
-
-;; build function to execute program
-;; flymake of flycheck setup
-(use-package flycheck
-  :hook (after-init . global-flycheck-mode))
-
-
-;; (use-package company
-;;   :ensure t
-;;   :defer t
-;;   :custom
-;;   ;; Search other buffers with the same modes for completion instead of
-;;   ;; searching all other buffers.
-;;   (company-dabbrev-other-buffers t)
-;;   (company-dabbrev-code-other-buffers t)
-;;   ;; M-<num> to select an option according to its number.
-;;   (company-show-numbers t)
-;;   ;; Only 2 letters required for completion to activate.
-;;   (company-minimum-prefix-length 2)
-;;   ;; Do not downcase completions by default.
-;;   (company-dabbrev-downcase nil)
-;;   ;; Even if I write something with the wrong case,
-;;   ;; provide the correct casing.
-;;   (company-dabbrev-ignore-case t)
-;;   ;; company completion wait
-;;   (company-idle-delay 0.01)
-;;   ;; No company-mode in shell & eshell
-;;   (company-global-modes '(not eshell-mode shell-mode))
-;;   ;; Use company with text and programming modes.
-;;     :hook ((text-mode . company-mode)
-;;            (prog-mode . company-mode)))
-(use-package corfu
-  ;; Optional customizations
-  :custom
-  ;; (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
-  (corfu-auto t)                 ;; Enable auto completion
-  ;; (corfu-separator ?\s)          ;; Orderless field separator
-  ;; (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
-  ;; (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
-  ;; (corfu-preview-current nil)    ;; Disable current candidate preview
-  ;; (corfu-preselect 'prompt)      ;; Preselect the prompt
-  ;; (corfu-on-exact-match nil)     ;; Configure handling of exact matches
-  ;; (corfu-scroll-margin 5)        ;; Use scroll margin
-
-  ;; Enable Corfu only for certain modes.
-  ;; :hook ((prog-mode . corfu-mode)
-  ;;        (shell-mode . corfu-mode)
-  ;;        (eshell-mode . corfu-mode))
-
-  ;; Recommended: Enable Corfu globally.  This is recommended since Dabbrev can
-  ;; be used globally (M-/).  See also the customization variable
-  ;; `global-corfu-modes' to exclude certain modes.
-  :init
-  (global-corfu-mode))
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+										;              yasnippets             ;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package yasnippet
   :ensure t
   :config
@@ -329,6 +191,7 @@
     (unless (yas-expand)
       (call-interactively #'company-complete-common))))
 
+
 (add-hook 'org-mode-hook
           (lambda ()
             (make-variable-buffer-local 'yas/trigger-key)
@@ -340,6 +203,12 @@
   (substitute-key-definition 'company-complete-common
                              'company-yasnippet-or-completion
                              company-active-map)))
+
+;;; simple.el ends here
+
+
+;;; not cleaned yet is below ------------------
+
 
 ;; M-x yas-insert-snippet
 ;; tab to expand snippet @BUG tab does not always expand snippet if company displaying choices, also need to fix custom

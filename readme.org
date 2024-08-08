@@ -1,7 +1,10 @@
-
 * mr-emacs
 
-A minimal emacs configuration
+A minimal emacs configuration.
+
+#+BEGIN_CENTER
+[[file:./media/mr-emacs-mascott.png]]
+#+END_CENTER
 
 ** Motivation
 
@@ -24,4 +27,5 @@ Emacs is great out of the box. This project aims to create a simple configuratio
 - [ ] [[file:modules/mr-orgmode.el][orgmode]]
 - [ ] [[file:modules/mr-python.el][python]]
 - [ ] [[file:modules/mr-eshell.el][eshell]]
-- [ ] [[file:today/today.el][today]] : a simple task tracker (WIP)
+- [-] [[file:today/today.el][today]] : a simple task tracker (WIP)
+- [ ] [[file:modules/mr-ai.el][ai]] : (whisper and GPT calls)

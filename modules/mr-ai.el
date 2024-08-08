@@ -1,4 +1,4 @@
-;;; mr-orgmode.el --- orgmode settings -*- lexical-binding: t -*-
+;;; mr-ai.el --- ai model integration -*- lexical-binding: t -*-
 
 ;; Author: Maxime Rousseau
 ;; Maintainer: Maxime Rousseau
@@ -26,21 +26,12 @@
 
 ;;; Commentary:
 
-;; pretty self explanatory
+;; simple integration with whisper speech-to-text and chat models
 
 ;;; Code:
 
 (message "Hello World!")
 
-(provide 'mr-orgmode)
+(provide 'mr-ai)
 
-;; org-mode settings
-(setq org-cycle-emulate-tab 'white)
-(add-hook 'org-mode-hook (lambda ()
-						   (turn-off-auto-fill)
-						   (visual-line-mode)))
-(setq org-image-actual-width nil) ;;To set image scale
-(add-hook 'org-mode-hook 'org-indent-mode) ;; not sure this works
-
-
-;;; mr-orgmode.el ends here
+;;; mr-ai.el ends here
