@@ -5,6 +5,7 @@
 <div class="logo">
 <p align="center">
 <img src="./media/mr-emacs-mascott.png" alt="mr-emacs-mascott.png" width="100px" />
+<br>
 A minimal emacs configuration.
 </p>
 </div>
