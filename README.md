@@ -1,10 +1,11 @@
 # mr-emacs
 
-A minimal emacs configuration.
+
 
 <div class="logo">
 <p align="center">
 <img src="./media/mr-emacs-mascott.png" alt="mr-emacs-mascott.png" width="100px" />
+A minimal emacs configuration.
 </p>
 </div>
 
