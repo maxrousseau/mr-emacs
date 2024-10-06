@@ -250,15 +250,15 @@ Sets up Swiper for improved buffer search and Counsel for extended command enhan
 ;; try to load modules
 (setq mr-emacs-root (file-name-directory (or load-file-name user-init-file)))
 (setq mr-emacs-module-dir (concat mr-emacs-root "modules/"))
-(condition-case nil
-    (load-file (concat mr-emacs-module-dir "mr-motion.el"))
-  (error (message-box "Could not load modules...")))
+;;(condition-case nil
+;;    (load-file (concat mr-emacs-module-dir "mr-motion.el"))
+;;  (error (message-box "Could not load modules...")))
 
 (defun load-modules-with-error-check (module-list)
   "Load each Emacs module from MODULE-LIST and display an error message if it fails to load."
   (dolist (module module-list)
     (condition-case err
-        (load-file (concat mr-emacs-module-dir module))
+        (load (concat mr-emacs-module-dir module))
       (error (message "Error loading module %s: %s" module (error-message-string err))))))
 
 ;; List of modules you want to load

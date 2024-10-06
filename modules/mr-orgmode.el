@@ -29,10 +29,7 @@
 ;; pretty self explanatory
 
 ;;; Code:
-
-(message "Hello World!")
-
-(provide 'mr-orgmode)
+;;(provide 'mr-orgmode)
 
 ;; org-mode settings
 (setq org-cycle-emulate-tab 'white)
@@ -43,11 +40,12 @@
 
 (add-hook 'org-mode-hook 'org-indent-mode) ;; not sure this works
 
-
-(plist-put org-format-latex-options :scale 2) ;; latex preview bigger
 (add-hook 'org-mode-hook (lambda ()
 						   (org-indent-mode 1)
-						   (org-fragtog-mode 1)))
+						   (org-fragtog-mode 1)
+						   (plist-put org-format-latex-options :scale 1.5)
+						   ))
+
 
 ;; ORGMODE ================================================================================
 ;; @TODO
@@ -68,8 +66,6 @@
   :config
   (add-hook 'dired-mode-hook 'org-download-enable);; Drag-and-drop to `dired`
   )
-
-(plist-put org-format-latex-options :scale 2)
 
 ;; ==========================================================
 ;; ORG READING MODE -- change font hook when in darkroom mode

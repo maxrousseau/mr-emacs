@@ -12,6 +12,8 @@
 (global-set-key (kbd "C-; n") 'make-frame)
 (global-set-key (kbd "C-; c") 'delete-frame)
 (global-set-key (kbd "C-; b") 'ibuffer)
+(global-set-key (kbd "C-; t") 'modus-themes-toggle)
+
 
 (eval-after-load "dired" '(progn
 			    (define-key dired-mode-map (kbd "C-; o") 'xah-open-in-external-app) ))
