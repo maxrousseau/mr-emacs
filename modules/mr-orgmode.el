@@ -40,7 +40,48 @@
 						   (turn-off-auto-fill)
 						   (visual-line-mode)))
 (setq org-image-actual-width nil) ;;To set image scale
+
 (add-hook 'org-mode-hook 'org-indent-mode) ;; not sure this works
+
+
+(plist-put org-format-latex-options :scale 2) ;; latex preview bigger
+(add-hook 'org-mode-hook (lambda ()
+						   (org-indent-mode 1)
+						   (org-fragtog-mode 1)))
+
+;; ORGMODE ================================================================================
+;; @TODO
+;; > ***setup DRAG AND DROP - https://github.com/abo-abo/org-download***
+;; > setup org agenda
+;; > case study presentation build script (case.el, use pynoter for ppt?, user beamer for academia)
+(use-package org-superstar
+  :ensure t
+  :config
+  (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1))))
+(use-package org-tree-slide
+  :custom
+  (org-image-actual-width nil))
+(add-to-list 'org-latex-packages-alist '("" "tabularx"))
+
+(use-package org-download
+  :ensure t
+  :config
+  (add-hook 'dired-mode-hook 'org-download-enable);; Drag-and-drop to `dired`
+  )
+
+(plist-put org-format-latex-options :scale 2)
+
+;; ==========================================================
+;; ORG READING MODE -- change font hook when in darkroom mode
+(defun my-darkroom-mode-hook ()
+  "Custom hook for darkroom-mode."
+  (setq buffer-face-mode-face '(:family "Helvetica" :height 120))
+  (buffer-face-mode))
+
+(add-hook 'darkroom-tentative-mode-hook 'my-darkroom-mode-hook)
+(add-hook 'darkroom-tentative-mode-off-hook
+          (lambda ()
+            (buffer-face-mode -1))) ; Revert to the default face when leaving darkroom-mode
 
 
 ;;; mr-orgmode.el ends here

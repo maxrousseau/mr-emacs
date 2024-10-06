@@ -27,7 +27,6 @@
   :hook (python-mode . blacken-mode))
 
 ;; programming
-;; (icomplete-mode t) I think i changed to cape?
 (add-hook 'python-mode-hook
     (lambda ()
 	    (setq-default indent-tabs-mode nil)
@@ -35,6 +34,7 @@
 	    (setq-default py-indent-tabs-mode t)
 		(add-to-list 'write-file-functions 'delete-trailing-whitespace)))
 
+										; GENERAL ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; flymake of flycheck setup
 (use-package flycheck
   :hook (after-init . global-flycheck-mode))
@@ -61,3 +61,7 @@
   ;; `global-corfu-modes' to exclude certain modes.
   :init
   (global-corfu-mode))
+
+;; lint with ruff
+(require 'flymake-ruff)
+(add-hook 'python-mode-hook #'flymake-ruff-load)

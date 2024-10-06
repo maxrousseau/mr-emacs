@@ -29,14 +29,18 @@
 ;; some eshell settings
 
 ;;; Code:
-
-(message "Hello World!")
-
 (provide 'mr-eshell)
 
 (setq eshell-prompt-function
       (lambda ()
         (concat (eshell/pwd) "\n $ ")))
 (setq eshell-highlight-prompt nil)
+
+;; SHELLS
+;; ===============================================================================
+;; VTERM @TODO configure and compare with eat/eshell other...
+;;(use-package vterm
+;;    :ensure t) ;; NEED TO INSTALL CMAKE!
+
 
 ;;; mr-eshell.el ends here
