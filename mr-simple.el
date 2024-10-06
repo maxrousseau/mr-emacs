@@ -259,7 +259,7 @@ Sets up Swiper for improved buffer search and Counsel for extended command enhan
   (dolist (module module-list)
     (condition-case err
         (load (concat mr-emacs-module-dir module))
-      (error (message "Error loading module %s: %s" module (error-message-string err))))))
+      (error (display-warning 'mr-emacs (message "Error loading module %s: %s" module (error-message-string err)))))))
 
 ;; List of modules you want to load
 (setq my-modules '("mr-ai.el"
