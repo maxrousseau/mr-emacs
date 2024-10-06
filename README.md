@@ -32,8 +32,8 @@ Emacs is great out of the box. This project aims to create a simple configuratio
 
 -   [x] [base configuration](./mr-simple.el) basic configuration settings (i.e. fonts, colorscheme, package setup, etc.)
 -   [x] [motions](modules/mr-motion.el) : use avy for editing and other movement settings
--   [ ] [orgmode](modules/mr-orgmode.el)
--   [ ] [python](modules/mr-python.el)
+-   [x] [orgmode](modules/mr-orgmode.el)
+-   [x] [python](modules/mr-python.el)
 -   [-] [eshell](modules/mr-eshell.el)
 -   [-] [ai](modules/mr-ai.el) : (whisper and GPT calls)
 -   [ ] [modeline](modules/mr-modeline.el)
