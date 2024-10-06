@@ -24,10 +24,8 @@ Emacs is great out of the box. This project aims to create a simple configuratio
 ``` sh
     mr-emacs/
       modules/    # modular configuration files (i.e. python, motion, etc)
-      themes/     # a light and dark themer
-
       mr-simple.el   # the core file containing the initialization filer
-      init.el     # symlink this file to ~/.emacs.d/init.el
+	  init.el     # symlink this file to ~/.emacs.d/init.el
 ```
 
 -   [x] [base configuration](./mr-simple.el) basic configuration settings (i.e. fonts, colorscheme, package setup, etc.)
