@@ -45,6 +45,13 @@
 						   (org-fragtog-mode 1)
 						   (plist-put org-format-latex-options :scale 1.5)
 						   ))
+                                        ; document annotation ;;;;;;;;;;;;;;;;;
+                                        ; pdftools and org-noter
+                                        ; M-x package-instal pdf-tools and org-noter
+                                        ;   make sure to run M-x pdf-tools-install after*
+;; (advice-remove 'pdf-annot-add-highlight-markup-annotation #'org-noter-insert-precise-note-toggle-no-questions)
+;; @TODO :: write a function which overrides both to highlight the region and a the note
+(custom-set-variables '(org-noter-notes-search-path (quote ("~/code/ebrain/notes/from_pdfs/"))))
 
 
 ;; ORGMODE ================================================================================
