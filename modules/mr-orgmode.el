@@ -51,8 +51,15 @@
                                         ;   make sure to run M-x pdf-tools-install after*
 ;; (advice-remove 'pdf-annot-add-highlight-markup-annotation #'org-noter-insert-precise-note-toggle-no-questions)
 ;; @TODO :: write a function which overrides both to highlight the region and a the note
-(custom-set-variables '(org-noter-notes-search-path (quote ("~/code/ebrain/notes/from_pdfs/"))))
 
+(use-package org-noter
+  :ensure t
+  :demand t
+  :config
+  (setq org-noter-notes-search-path        '("~/code/ebrain/notes/docnotes"))
+  (setq org-noter-default-notes-file-names '("pdf-notes.org"))
+  (pdf-tools-install) 
+  )
 
 ;; ORGMODE ================================================================================
 ;; @TODO
